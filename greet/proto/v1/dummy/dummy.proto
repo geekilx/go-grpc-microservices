@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package greet.v1;
+
+option go_package = "github.com/ilx/grpc-course/greet/proto/v1/dummy;dummyv1";
+
+message Dummy {
+  uint64 id = 1;
+}
+
+service DummyService {}
