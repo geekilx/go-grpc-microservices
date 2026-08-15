@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package calculator.v1;
+
+option go_package = "github.com/ilx/grpc-course/proto/calculator/v1;calculatorv1";
+
+message PrimeRequest {
+  int32 a = 1;
+}
+
+message PrimeResponse {
+  int32 result = 1;
+}
+
+service CalculatorService {
+  rpc Prime(PrimeRequest) returns (stream PrimeResponse);
+}

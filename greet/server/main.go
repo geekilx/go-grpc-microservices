@@ -1,0 +1,29 @@
+package main
+
+import (
+	"log"
+	"net"
+
+	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
+	"google.golang.org/grpc"
+)
+
+func main() {
+
+	lis, err := net.Listen("tcp", ":50051")
+
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	log.Println("listening on :50051")
+
+	s := grpc.NewServer()
+	grpcServer := NewGreetService()
+
+	greetv1.RegisterGreetServiceServer(s, grpcServer)
+
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+
+}
