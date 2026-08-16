@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
 	"google.golang.org/grpc/codes"
@@ -26,5 +27,19 @@ func (s *GreetService) Greet(ctx context.Context, req *greetv1.GreetRequest) (*g
 	return &greetv1.GreetResponse{
 		Result: fmt.Sprintf("Hello from %v", req.GetFirstName()),
 	}, nil
+
+}
+
+func (s *GreetService) GreetManyTimes(req *greetv1.GreetRequest, stream greetv1.GreetService_GreetManyTimesServer) error {
+
+	log.Printf("GreetManyTimes called with %v", req)
+
+	for i := 0; i < 10; i++ {
+		if err := stream.Send(&greetv1.GreetResponse{Result: fmt.Sprintf("Hello from %v, number %d", req.GetFirstName(), i)}); err != nil {
+			log.Fatalf("failed to send stream: %v", err)
+		}
+	}
+
+	return nil
 
 }

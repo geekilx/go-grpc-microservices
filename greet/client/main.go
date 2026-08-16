@@ -27,4 +27,8 @@ func main() {
 	}
 	log.Printf("Greet response: %s", response.GetResult())
 
+	log.Println("Calling GreetManyTimes")
+
+	DoGreetManyTimes(client)
+
 }
