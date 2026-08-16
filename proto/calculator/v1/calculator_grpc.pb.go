@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	CalculatorService_Prime_FullMethodName = "/calculator.v1.CalculatorService/Prime"
+	CalculatorService_Sum_FullMethodName   = "/calculator.v1.CalculatorService/Sum"
+	CalculatorService_Avg_FullMethodName   = "/calculator.v1.CalculatorService/Avg"
 )
 
 // CalculatorServiceClient is the client API for CalculatorService service.
@@ -27,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CalculatorServiceClient interface {
 	Prime(ctx context.Context, in *PrimeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[PrimeResponse], error)
+	Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
+	Avg(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[AvgRequest, AvgResponse], error)
 }
 
 type calculatorServiceClient struct {
@@ -56,11 +60,36 @@ func (c *calculatorServiceClient) Prime(ctx context.Context, in *PrimeRequest, o
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type CalculatorService_PrimeClient = grpc.ServerStreamingClient[PrimeResponse]
 
+func (c *calculatorServiceClient) Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SumResponse)
+	err := c.cc.Invoke(ctx, CalculatorService_Sum_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *calculatorServiceClient) Avg(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[AvgRequest, AvgResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &CalculatorService_ServiceDesc.Streams[1], CalculatorService_Avg_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[AvgRequest, AvgResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type CalculatorService_AvgClient = grpc.ClientStreamingClient[AvgRequest, AvgResponse]
+
 // CalculatorServiceServer is the server API for CalculatorService service.
 // All implementations must embed UnimplementedCalculatorServiceServer
 // for forward compatibility.
 type CalculatorServiceServer interface {
 	Prime(*PrimeRequest, grpc.ServerStreamingServer[PrimeResponse]) error
+	Sum(context.Context, *SumRequest) (*SumResponse, error)
+	Avg(grpc.ClientStreamingServer[AvgRequest, AvgResponse]) error
 	mustEmbedUnimplementedCalculatorServiceServer()
 }
 
@@ -73,6 +102,12 @@ type UnimplementedCalculatorServiceServer struct{}
 
 func (UnimplementedCalculatorServiceServer) Prime(*PrimeRequest, grpc.ServerStreamingServer[PrimeResponse]) error {
 	return status.Error(codes.Unimplemented, "method Prime not implemented")
+}
+func (UnimplementedCalculatorServiceServer) Sum(context.Context, *SumRequest) (*SumResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Sum not implemented")
+}
+func (UnimplementedCalculatorServiceServer) Avg(grpc.ClientStreamingServer[AvgRequest, AvgResponse]) error {
+	return status.Error(codes.Unimplemented, "method Avg not implemented")
 }
 func (UnimplementedCalculatorServiceServer) mustEmbedUnimplementedCalculatorServiceServer() {}
 func (UnimplementedCalculatorServiceServer) testEmbeddedByValue()                           {}
@@ -106,18 +141,53 @@ func _CalculatorService_Prime_Handler(srv interface{}, stream grpc.ServerStream)
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type CalculatorService_PrimeServer = grpc.ServerStreamingServer[PrimeResponse]
 
+func _CalculatorService_Sum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SumRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CalculatorServiceServer).Sum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CalculatorService_Sum_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CalculatorServiceServer).Sum(ctx, req.(*SumRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CalculatorService_Avg_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(CalculatorServiceServer).Avg(&grpc.GenericServerStream[AvgRequest, AvgResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type CalculatorService_AvgServer = grpc.ClientStreamingServer[AvgRequest, AvgResponse]
+
 // CalculatorService_ServiceDesc is the grpc.ServiceDesc for CalculatorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CalculatorService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "calculator.v1.CalculatorService",
 	HandlerType: (*CalculatorServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Sum",
+			Handler:    _CalculatorService_Sum_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Prime",
 			Handler:       _CalculatorService_Prime_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "Avg",
+			Handler:       _CalculatorService_Avg_Handler,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "proto/calculator/v1/calculator.proto",

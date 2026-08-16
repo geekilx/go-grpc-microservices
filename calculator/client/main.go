@@ -35,4 +35,27 @@ func main() {
 		log.Printf("Response received: %v", resp.GetResult())
 	}
 
+	sumResp, err := client.Sum(context.Background(), &calculatorv1.SumRequest{A: 3, B: 10})
+	if err != nil {
+		log.Fatalf("failed to call sum: %v", err)
+	}
+	log.Printf("Sum response: %v", sumResp.GetResult())
+
+	avgStream, err := client.Avg(context.Background())
+	if err != nil {
+		log.Fatalf("failed to call Avg: %v", err)
+	}
+	for i := 1; i < 5; i++ {
+		if err := avgStream.Send(&calculatorv1.AvgRequest{A: float32(i)}); err != nil {
+			log.Fatalf("failed to send avg request: %v", err)
+		}
+	}
+
+	avgResp, err := avgStream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("failed to receive avg response: %v", err)
+	}
+
+	log.Printf("Avg response: %v", avgResp.GetResult())
+
 }
