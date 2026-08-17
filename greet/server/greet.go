@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
@@ -41,5 +42,22 @@ func (s *GreetService) GreetManyTimes(req *greetv1.GreetRequest, stream greetv1.
 	}
 
 	return nil
+
+}
+
+func (s *GreetService) LongGreet(stream greetv1.GreetService_LongGreetServer) error {
+
+	log.Printf("LongGreet called")
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&greetv1.GreetResponse{Result: "i got all requests :)"})
+		}
+		if err != nil {
+			return err
+		}
+		log.Printf("LongGreet response: %s", req.GetFirstName())
+	}
 
 }

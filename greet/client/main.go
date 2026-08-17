@@ -31,4 +31,8 @@ func main() {
 
 	DoGreetManyTimes(client)
 
+	log.Println("Calling LongGreet")
+
+	DoLongGreet(client)
+
 }
