@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log"
+	"math/rand/v2"
 
 	calculatorv1 "github.com/geekilx/grpc-course/proto/calculator/v1"
 	"google.golang.org/grpc"
@@ -57,5 +58,37 @@ func main() {
 	}
 
 	log.Printf("Avg response: %v", avgResp.GetResult())
+
+	//////////// bidirectional stream ////////////
+	maxStream, err := client.Max(context.Background())
+	if err != nil {
+		log.Fatalf("failed while calling max: %v", err)
+	}
+
+	waitc := make(chan struct{})
+
+	go func() {
+		for i := 1; i < 5; i++ {
+			if err := maxStream.Send(&calculatorv1.MaxRequest{Num: rand.Int32()}); err != nil {
+				log.Fatalf("error while sending numbers to the stream: %v", err)
+			}
+		}
+		maxStream.CloseSend()
+	}()
+
+	go func() {
+		for {
+			res, err := maxStream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("failed to receive response: %v", err)
+			}
+			log.Printf("Response received: %v", res.GetResult())
+		}
+		close(waitc)
+	}()
+	<-waitc
 
 }

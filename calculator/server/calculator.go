@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"io"
+	"log"
 
 	calculatorv1 "github.com/geekilx/grpc-course/proto/calculator/v1"
 	"google.golang.org/grpc/codes"
@@ -64,5 +65,34 @@ func (s *CalculatorService) Avg(stream calculatorv1.CalculatorService_AvgServer)
 	}
 
 	return stream.SendAndClose(&calculatorv1.AvgResponse{Result: sum / count})
+
+}
+
+func (s *CalculatorService) Max(stream calculatorv1.CalculatorService_MaxServer) error {
+
+	var num int32
+	var allNums []int32
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("failed while receiving max request: %v", err)
+		}
+
+		log.Printf("received number from client: %d", req.GetNum())
+
+		if num < req.GetNum() {
+			num = req.GetNum()
+			if err := stream.Send(&calculatorv1.MaxResponse{Result: num}); err != nil {
+				log.Fatalf("failed while sending max response: %v", err)
+			}
+			allNums = append(allNums, num)
+		}
+
+	}
+
+	return nil
 
 }
