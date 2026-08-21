@@ -53,3 +53,48 @@ func DoLongGreet(client greetv1.GreetServiceClient) {
 	log.Printf("LongGreet response: %s", resp.GetResult())
 
 }
+
+func DoGreetEveryone(client greetv1.GreetServiceClient) {
+
+	println("passed1")
+
+	stream, err := client.GreetEveryone(context.Background())
+	if err != nil {
+		log.Fatalf("error while calling GreetEveryone: %v", err)
+	}
+	println("passed2")
+
+	waitc := make(chan struct{})
+
+	go func() {
+		for i := 0; i < 10; i++ {
+			if err := stream.Send(&greetv1.GreetRequest{FirstName: fmt.Sprintf("ilia %d", i)}); err != nil {
+				log.Fatalf("failed to send stream: %v", err)
+			}
+		}
+		stream.CloseSend()
+	}()
+
+	println("passed3")
+
+	go func() {
+		for {
+			resp, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("error while receiving stream: %v", err)
+			}
+			log.Printf("GreetEveryone server streaming response: %s", resp.GetResult())
+		}
+		close(waitc)
+	}()
+
+	println("passed4")
+
+	<-waitc
+
+	println("passed5")
+
+}

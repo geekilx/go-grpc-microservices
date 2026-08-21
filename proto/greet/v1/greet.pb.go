@@ -118,11 +118,12 @@ const file_proto_greet_v1_greet_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tR\tfirstName\"'\n" +
 	"\rGreetResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\xcd\x01\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\x93\x02\n" +
 	"\fGreetService\x128\n" +
 	"\x05Greet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse\x12C\n" +
 	"\x0eGreetManyTimes\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse0\x01\x12>\n" +
-	"\tLongGreet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x01B3Z1github.com/ilx/grpc-course/proto/greet/v1;greetv1b\x06proto3"
+	"\tLongGreet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x01\x12D\n" +
+	"\rGreetEveryone\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x010\x01B3Z1github.com/ilx/grpc-course/proto/greet/v1;greetv1b\x06proto3"
 
 var (
 	file_proto_greet_v1_greet_proto_rawDescOnce sync.Once
@@ -145,11 +146,13 @@ var file_proto_greet_v1_greet_proto_depIdxs = []int32{
 	0, // 0: greet.v1.GreetService.Greet:input_type -> greet.v1.GreetRequest
 	0, // 1: greet.v1.GreetService.GreetManyTimes:input_type -> greet.v1.GreetRequest
 	0, // 2: greet.v1.GreetService.LongGreet:input_type -> greet.v1.GreetRequest
-	1, // 3: greet.v1.GreetService.Greet:output_type -> greet.v1.GreetResponse
-	1, // 4: greet.v1.GreetService.GreetManyTimes:output_type -> greet.v1.GreetResponse
-	1, // 5: greet.v1.GreetService.LongGreet:output_type -> greet.v1.GreetResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	0, // 3: greet.v1.GreetService.GreetEveryone:input_type -> greet.v1.GreetRequest
+	1, // 4: greet.v1.GreetService.Greet:output_type -> greet.v1.GreetResponse
+	1, // 5: greet.v1.GreetService.GreetManyTimes:output_type -> greet.v1.GreetResponse
+	1, // 6: greet.v1.GreetService.LongGreet:output_type -> greet.v1.GreetResponse
+	1, // 7: greet.v1.GreetService.GreetEveryone:output_type -> greet.v1.GreetResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

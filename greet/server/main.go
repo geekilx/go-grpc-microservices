@@ -6,6 +6,7 @@ import (
 
 	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -21,6 +22,8 @@ func main() {
 	grpcServer := NewGreetService()
 
 	greetv1.RegisterGreetServiceServer(s, grpcServer)
+
+	reflection.Register(s)
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

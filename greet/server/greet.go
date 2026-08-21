@@ -61,3 +61,24 @@ func (s *GreetService) LongGreet(stream greetv1.GreetService_LongGreetServer) er
 	}
 
 }
+
+func (s *GreetService) GreetEveryone(stream greetv1.GreetService_GreetEveryoneServer) error {
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error while reading client stream: %v", err)
+		}
+
+		if err := stream.Send(&greetv1.GreetResponse{Result: fmt.Sprintf("Hello from %v", req.GetFirstName())}); err != nil {
+			log.Fatalf("failed to send stream to client: %v", err)
+		}
+
+		log.Printf("recieved from client: %s", req.GetFirstName())
+
+	}
+
+}

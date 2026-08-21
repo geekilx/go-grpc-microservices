@@ -35,4 +35,7 @@ func main() {
 
 	DoLongGreet(client)
 
+	log.Println("Calling GreetEveryone")
+	DoGreetEveryone(client)
+
 }
