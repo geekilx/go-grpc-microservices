@@ -37,7 +37,7 @@ func (s *GreetService) GreetManyTimes(req *greetv1.GreetRequest, stream greetv1.
 
 	for i := 0; i < 10; i++ {
 		if err := stream.Send(&greetv1.GreetResponse{Result: fmt.Sprintf("Hello from %v, number %d", req.GetFirstName(), i)}); err != nil {
-			log.Fatalf("failed to send stream: %v", err)
+			return status.Error(codes.Internal, "failed to send response")
 		}
 	}
 
@@ -70,7 +70,7 @@ func (s *GreetService) GreetEveryone(stream greetv1.GreetService_GreetEveryoneSe
 			return nil
 		}
 		if err != nil {
-			log.Fatalf("Error while reading client stream: %v", err)
+			return status.Error(codes.Internal, "failed to receive request")
 		}
 
 		if err := stream.Send(&greetv1.GreetResponse{Result: fmt.Sprintf("Hello from %v", req.GetFirstName())}); err != nil {

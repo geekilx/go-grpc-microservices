@@ -78,7 +78,7 @@ func (s *CalculatorService) Max(stream calculatorv1.CalculatorService_MaxServer)
 			break
 		}
 		if err != nil {
-			log.Fatalf("failed while receiving max request: %v", err)
+			return status.Error(codes.Internal, "failed to receive max request")
 		}
 
 		log.Printf("received number from client: %d", req.GetNum())
@@ -86,7 +86,7 @@ func (s *CalculatorService) Max(stream calculatorv1.CalculatorService_MaxServer)
 		if num < req.GetNum() {
 			num = req.GetNum()
 			if err := stream.Send(&calculatorv1.MaxResponse{Result: num}); err != nil {
-				log.Fatalf("failed while sending max response: %v", err)
+				return status.Error(codes.Internal, "failed to send max response")
 			}
 			allNums = append(allNums, num)
 		}
