@@ -2,17 +2,37 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"io"
 	"log"
+	"os"
 
 	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 )
 
 func main() {
+	caCert, err := os.ReadFile("grpc-cets/ca.pem")
+	if err != nil {
+		log.Fatalf("failed to read CA certificate: %v", err)
+	}
+	caPool := x509.NewCertPool()
+	if !caPool.AppendCertsFromPEM(caCert) {
+		log.Fatalf("failed to append CA certificate")
+	}
 
-	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	clientCert, err := tls.LoadX509KeyPair("grpc-cets/client.pem", "grpc-cets/client-key.pem")
+	if err != nil {
+		log.Fatalf("failed to load client certificate: %v", err)
+	}
+
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{
+		ServerName:   "localhost",
+		Certificates: []tls.Certificate{clientCert},
+		RootCAs:      caPool,
+	})))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
