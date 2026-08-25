@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	blogv1 "github.com/geekilx/grpc-course/proto/blog"
+	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"google.golang.org/grpc"

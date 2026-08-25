@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	blogv1 "github.com/geekilx/grpc-course/proto/blog"
+	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -66,7 +65,7 @@ func (s *BlogService) ReadBlog(ctx context.Context, req *blogv1.BlogId) (*blogv1
 
 	log.Printf("blog with ID %v found", req.Id)
 
-	return &blogv1.Blog{AuthorId: data.AuthorId, Title: data.Title, Content: data.Content}, nil
+	return documentToBlog(data), nil
 
 }
 
@@ -97,11 +96,11 @@ func (s *BlogService) UpdateBlog(ctx context.Context, req *blogv1.Blog) (*emptyp
 
 func (s *BlogService) ListBlogs(req *emptypb.Empty, stream blogv1.BlogService_ListBlogsServer) error {
 
-	ctx := context.Background()
+	ctx := stream.Context()
 
 	cursor, err := collection.Find(ctx, bson.D{})
 	if err != nil {
-		return status.Errorf(codes.Internal, fmt.Sprintf("unknown internal error: %v", err))
+		return status.Errorf(codes.Internal, "unknown internal error: %v", err)
 	}
 
 	for cursor.Next(ctx) {
@@ -111,11 +110,7 @@ func (s *BlogService) ListBlogs(req *emptypb.Empty, stream blogv1.BlogService_Li
 			return status.Errorf(codes.Internal, "failed to retrive blog from database")
 		}
 
-		if err := stream.Send(&blogv1.Blog{
-			AuthorId: blog.AuthorId,
-			Title:    blog.Title,
-			Content:  blog.Content,
-		}); err != nil {
+		if err := stream.Send(documentToBlog(blog)); err != nil {
 			return status.Errorf(codes.Internal, "failed to send blog")
 		}
 
@@ -127,18 +122,18 @@ func (s *BlogService) DeleteBlog(ctx context.Context, req *blogv1.BlogId) (*empt
 
 	oid, err := bson.ObjectIDFromHex(req.Id)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "couldn't convert to oid")
+		return &emptypb.Empty{}, status.Errorf(codes.Internal, "couldn't convert to oid")
 	}
 
 	res, err := collection.DeleteOne(ctx, bson.M{"_id": oid})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "couldn't delete the blog: %v", err)
+		return &emptypb.Empty{}, status.Errorf(codes.Internal, "couldn't delete the blog: %v", err)
 	}
 
 	if res.DeletedCount == 0 {
-		return nil, status.Errorf(codes.Internal, "no blog was deleted")
+		return &emptypb.Empty{}, status.Errorf(codes.Internal, "no blog was deleted")
 	}
 
-	return nil, nil
+	return &emptypb.Empty{}, nil
 
 }

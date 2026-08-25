@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	blogv1 "github.com/geekilx/grpc-course/proto/blog"
+	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -31,7 +31,7 @@ func main() {
 
 	log.Println("Calling ReadBlog")
 
-	rbRes, err := client.ReadBlog(context.Background(), &blogv1.BlogId{Id: "6a8a89b4f4ec8560e2c84b77"})
+	rbRes, err := client.ReadBlog(context.Background(), &blogv1.BlogId{Id: res.Id})
 	if err != nil {
 		log.Fatalf("failed to get blog: %v", err)
 	}
@@ -50,6 +50,9 @@ func main() {
 	log.Println("calling ListBlogs")
 
 	blogStream, err := client.ListBlogs(context.Background(), nil)
+	if err != nil {
+		log.Fatalf("failed while calling ListBlogs stream")
+	}
 	for {
 		res, err := blogStream.Recv()
 		if err == io.EOF {
@@ -65,7 +68,7 @@ func main() {
 
 	log.Println("calling DeleteBlog")
 
-	_, err = client.DeleteBlog(context.Background(), &blogv1.BlogId{Id: "6a8a89b4f4ec8560e2c84b77"})
+	_, err = client.DeleteBlog(context.Background(), &blogv1.BlogId{Id: res.Id})
 	if err != nil {
 		log.Fatalf("failed to delete blog: %v", err)
 	}
