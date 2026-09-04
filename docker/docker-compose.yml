@@ -1,6 +1,18 @@
-version: '3.1'
 
 services:
+  blog-server:
+    build:
+      context: ..
+      dockerfile: docker/dockerfile
+    restart: always
+    ports:
+      - 50051:50051
+    env_file:
+        - ../.env
+    environment:
+      MONGO_URI: mongodb://root:root@mongo:27017/
+    depends_on:
+    - mongo
   mongo:
     image: mongo
     restart: always
