@@ -12,6 +12,13 @@ type BlogItem struct {
 	Content  string        `bson:"content"`
 }
 
+type UserItem struct {
+	ID       bson.ObjectID `bson:"_id,omitempty"`
+	Username string        `bson:"username"`
+	Password string        `bson:"password"`
+	Email    string        `bson:"email"`
+}
+
 func documentToBlog(data *BlogItem) *blogv1.Blog {
 
 	return &blogv1.Blog{
