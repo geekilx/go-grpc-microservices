@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	calculatorv1 "github.com/geekilx/grpc-course/proto/calculator/v1"
+	calculatorv1 "github.com/geekilx/go-grpc-microservices/proto/calculator/v1"
 	"google.golang.org/grpc"
 )
 

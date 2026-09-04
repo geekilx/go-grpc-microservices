@@ -410,7 +410,7 @@ const file_proto_calculator_v1_calculator_proto_rawDesc = "" +
 	"\x05Prime\x12\x1b.calculator.v1.PrimeRequest\x1a\x1c.calculator.v1.PrimeResponse0\x01\x12<\n" +
 	"\x03Sum\x12\x19.calculator.v1.SumRequest\x1a\x1a.calculator.v1.SumResponse\x12>\n" +
 	"\x03Avg\x12\x19.calculator.v1.AvgRequest\x1a\x1a.calculator.v1.AvgResponse(\x01\x12@\n" +
-	"\x03Max\x12\x19.calculator.v1.MaxRequest\x1a\x1a.calculator.v1.MaxResponse(\x010\x01B=Z;github.com/ilx/grpc-course/proto/calculator/v1;calculatorv1b\x06proto3"
+	"\x03Max\x12\x19.calculator.v1.MaxRequest\x1a\x1a.calculator.v1.MaxResponse(\x010\x01B=Z;github.com/ilx/go-grpc-microservices/proto/calculator/v1;calculatorv1b\x06proto3"
 
 var (
 	file_proto_calculator_v1_calculator_proto_rawDescOnce sync.Once

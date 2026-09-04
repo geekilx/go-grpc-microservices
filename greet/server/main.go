@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
+	greetv1 "github.com/geekilx/go-grpc-microservices/proto/greet/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

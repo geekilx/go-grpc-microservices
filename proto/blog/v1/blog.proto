@@ -4,7 +4,7 @@ package blog.v1;
 
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/geekilx/grpc-course/proto/blog/v1;blogv1";
+option go_package = "github.com/geekilx/go-grpc-microservices/proto/blog/v1;blogv1";
 
 message Blog {
   string id = 1;
@@ -17,10 +17,36 @@ message BlogId {
   string id = 1;
 }
 
+message SignupRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message SignupResponse {
+  string id = 1;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
 service BlogService {
   rpc CreateBlog(Blog) returns (BlogId) {}
   rpc ReadBlog(BlogId) returns (Blog) {}
   rpc UpdateBlog(Blog) returns (google.protobuf.Empty) {}
   rpc ListBlogs(google.protobuf.Empty) returns (stream Blog) {}
   rpc DeleteBlog(BlogId) returns (google.protobuf.Empty) {}
+  rpc Signup(SignupRequest) returns (SignupResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {}
 }

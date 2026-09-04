@@ -123,7 +123,7 @@ const file_proto_greet_v1_greet_proto_rawDesc = "" +
 	"\x05Greet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse\x12C\n" +
 	"\x0eGreetManyTimes\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse0\x01\x12>\n" +
 	"\tLongGreet\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x01\x12D\n" +
-	"\rGreetEveryone\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x010\x01B3Z1github.com/ilx/grpc-course/proto/greet/v1;greetv1b\x06proto3"
+	"\rGreetEveryone\x12\x16.greet.v1.GreetRequest\x1a\x17.greet.v1.GreetResponse(\x010\x01B3Z1github.com/ilx/go-grpc-microservices/proto/greet/v1;greetv1b\x06proto3"
 
 var (
 	file_proto_greet_v1_greet_proto_rawDescOnce sync.Once

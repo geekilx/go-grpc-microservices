@@ -1,7 +1,7 @@
 package main
 
 import (
-	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
+	blogv1 "github.com/geekilx/go-grpc-microservices/proto/blog/v1"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 

@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
+	blogv1 "github.com/geekilx/go-grpc-microservices/proto/blog/v1"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"

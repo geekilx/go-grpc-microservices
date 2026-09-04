@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	blogv1 "github.com/geekilx/grpc-course/proto/blog/v1"
+	blogv1 "github.com/geekilx/go-grpc-microservices/proto/blog/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"

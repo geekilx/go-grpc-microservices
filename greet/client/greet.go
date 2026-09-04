@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 
-	greetv1 "github.com/geekilx/grpc-course/proto/greet/v1"
+	greetv1 "github.com/geekilx/go-grpc-microservices/proto/greet/v1"
 )
 
 func DoGreetManyTimes(client greetv1.GreetServiceClient) {
