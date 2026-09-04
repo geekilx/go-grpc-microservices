@@ -1,1 +1,8 @@
 .env
+
+# Compiled binaries
+client
+blog-server
+*.exe
+*.test
+*.out
